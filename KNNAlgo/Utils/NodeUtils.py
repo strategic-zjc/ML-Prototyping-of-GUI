@@ -1,9 +1,9 @@
-import RectUtils.RectUtil
+import GUIDetection.RectUtils.RectUtil as RectUtil
 from KNNAlgo.Utils.Node import *
 from CNNClassifier import classifier
-
-
+from GUIDetection.Utils.ImageUtil import showGUIComponent
 def rectViewsToNodes(rectViews, image):
+    showCnt = 0
     nodeList = []
     for rectView in rectViews:
         node = GUINode(rect=rectView.rect)
@@ -11,7 +11,10 @@ def rectViewsToNodes(rectViews, image):
         node_image = image[rectView.y: rectView.y+rectView.height, rectView.x : rectView.x + rectView.width]
         node.img = node_image
         node.classType = classifier.predict(node_image)
-        print(node.classType)
+        print(f'GUI Component type {node.classType}')
+        if showCnt < 5:
+            showGUIComponent(node.img,node.classType)
+            showCnt+=1
         nodeList.append(node)
     return nodeList
 
@@ -71,6 +74,6 @@ def containerNodeIntern(Node, containerNode):
 
 def findBoundOfNode(nodes):
     rects = [node.rect for node in nodes]
-    return RectUtils.RectUtil.findBoundOfRects(rects)
+    return RectUtil.findBoundOfRects(rects)
 
 

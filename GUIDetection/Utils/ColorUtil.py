@@ -3,7 +3,6 @@
 from random import *
 from GUIDetection.RectUtils.Rect import Rect
 import copy
-#import Utils.ImageUtil as ImageUtil
       
 MAX_AREA_SCAN = 1000
 
@@ -32,174 +31,10 @@ class CColor:
     Dark_gray = (169,169,169)
     Green = (0,255,0)
 
-
-
-
-
-def pixelWithinChildren(x,y , rectView):
-    for child in rectView.mChildren:
-        if x- child.x>=0 and x- child.x <= child.width and  y- child.y>=0 and y- child.y <= child.height:
-            return False
-        else:
-            return True
-        
-def isAContainer(rect, image) :
-    x = int(rect.x)
-    y = int(rect.y)
-    height = int(rect.height)
-    width = int(rect.width)
-    area = height * width
-    endX = int(x + width)
-    endY = int(y + height)
-    if( len(image.shape) < 3):
-        return -1
-    
-    
-    channel = (image.shape)[2]
-    imgHeight = (image.shape)[0]
-    imgWidht = (image.shape)[1]
-#    if (channel != 3 and channel != 4):
-#        return -1
-    if(endX >= imgWidht):
-        endX = imgWidht -1
-    if(endY >= imgHeight):
-        endY = imgHeight -1
-            
-    startIndex = channel - 3
-    a = 255
-
-    elementColor = {}
-    skipPixel = int((area / MAX_AREA_SCAN)**(0.5))
-    if (skipPixel == 0) :
-        skipPixel = 1
-    cnt = 0 
-
-    maxColor = toInt(0, 0, 0, 0) 
-    totalPixelCount = 0
-
-    for i in range(x,endX,skipPixel):
-        for j in range(y,endY,skipPixel):
-            if(pixelWithinChildren(i,j,rect)):
-                totalPixelCount = totalPixelCount +1
-#            temp = image[j] [i] [startIndex]
-#            print("Coming here Atleaset")
-                b = image[j] [i] [startIndex]
-                g = image[j] [i] [startIndex + 1]
-                r = image[j] [i] [startIndex+ 2]
-                currentColor = toInt(a, r, g, b)
-                if currentColor in elementColor:
-                    elementColor[currentColor] = elementColor[currentColor] + 1
-                else:
-                    elementColor[currentColor] = 1
-                if elementColor[currentColor] >= cnt :
-                    cnt, maxColor = elementColor[currentColor], currentColor
-    
-    
-    if(cnt/totalPixelCount >0.7):
-        rect.mColor = maxColor
-        return True
-    else: 
-        return False
-#
-#    return maxColor
-
-def findDominateColor(rect, image) :
-    x = int(rect.x)
-    y = int(rect.y)
-    height = int(rect.height)
-    width = int(rect.width)
-    area = height * width
-    endX = int(x + width)
-    endY = int(y + height)
-    if( len(image.shape) < 3):
-        return -1
-    
-    
-    channel = (image.shape)[2]
-    imgHeight = (image.shape)[0]
-    imgWidht = (image.shape)[1]
-#    if (channel != 3 and channel != 4):
-#        return -1
-    if(endX >= imgWidht):
-        endX = imgWidht -1
-    if(endY >= imgHeight):
-        endY = imgHeight -1
-            
-    startIndex = channel - 3
-    a = 255
-
-    elementColor = {}
-    skipPixel = int((area / MAX_AREA_SCAN)**(0.5))
-    if (skipPixel == 0) :
-        skipPixel = 1
-    cnt = 0 
-
-    maxColor = toInt(0, 0, 0, 0) 
-#    print(image.shape)
-
-    for i in range(x,endX,skipPixel):
-        for j in range(y,endY,skipPixel):
-#            temp = image[j] [i] [startIndex]
-#            print("Coming here Atleaset")
-            b = image[j] [i] [startIndex]
-            g = image[j] [i] [startIndex + 1]
-            r = image[j] [i] [startIndex+ 2]
-            currentColor = toInt(a, r, g, b)
-            if currentColor in elementColor:
-                elementColor[currentColor] = elementColor[currentColor] + 1
-            else:
-                elementColor[currentColor] = 1
-            if elementColor[currentColor] >= cnt :
-                cnt, maxColor = elementColor[currentColor], currentColor
-    
-
-    return maxColor
-
 def	 getImageFromRect(original, rect) :
     newImage = copy.deepcopy(original[int(rect.y):int(rect.y+rect.height),int(rect.x):int(rect.x+rect.width)])
     return newImage
 
-def findDominateColorForTextView(rect, image) :
-
-    elementColor = {}
-    endX,endY = rect.rect.br()
-    x,y = rect.rect.tl()
-    img = getImageFromRect(image,rect.rect)
-    if( len(img.shape) < 3):
-        return -1
-    imgHeight = (img.shape)[0]
-    imgWidht = (img.shape)[1]
-
-    channel = (image.shape)[2]
-    startIndex = channel - 3
-    a = 255
-#    print(rect.mTextInfo.textWrapper.text)
-    for i in range(0,imgWidht-1):
-        for j in range(0,imgHeight-1):
-#            temp = image[j] [i] [startIndex]
-#            print("Coming here Atleaset")
-            b = img[j] [i] [startIndex]
-            g = img[j] [i] [startIndex + 1]
-            r = img[j] [i] [startIndex+ 2]
-            currentColor = (a, r, g, b)
-            if currentColor in elementColor:
-                elementColor[currentColor] = elementColor[currentColor] + 1
-            else:
-                elementColor[currentColor] = 1
-#            if elementColor[currentColor] >= cnt :
-#                cnt, maxColor = elementColor[currentColor], currentColor
-    sorted_Color =sorted(elementColor, key=elementColor.get,reverse=True)
-#    print(sorted_Color)
-    backGroundColor = sorted_Color[0]
-    index =1
-    textColor = sorted_Color[index]
-#    print(rgbDiff(backGroundColor, textColor))
-    while(rgbDiff(backGroundColor, textColor)<100 and index < len(sorted_Color)):
-        index = index +1
-        textColor = sorted_Color[index]
-        
-    
-    return (alphaColortoInt(backGroundColor),alphaColortoInt(textColor))
         
 def rgbDiff(scaColor1, scaColor2):
     return abs(int(scaColor1[1])-int(scaColor2[1])) + abs(int(scaColor1[2])-int(scaColor2[2])) + abs(int(scaColor1[3])-int(scaColor2[3])) 
@@ -227,8 +62,3 @@ def randomColor() :
 def randomColorInt():
     return toInt(randomColor()[0],randomColor()[1],randomColor()[2],randomColor()[3])
 
-
-class ColorWrapper:
-    def __init__(self, color =cColortoInt(CColor.Black) , thicknessType=1):
-            self.color = color
-            self.thicknessType = thicknessType 

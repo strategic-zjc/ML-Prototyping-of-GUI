@@ -1,6 +1,5 @@
 from GUIDetection.RectUtils.Rect import Rect
 import GUIDetection.RectUtils.RectUtil as RectUtil
-import GUIDetection.RectUtils.RectViewUtil as RecViewUtil
 
 
 
@@ -10,7 +9,6 @@ class RectView:
         self.rect = rect
         self.contour = contour
         self.mChildren = []
-        self.mType = RecViewUtil.VIEW_TYPE_DEFAULT
         self.x = rect.x
         self.y = rect.y
         self.width = rect.width

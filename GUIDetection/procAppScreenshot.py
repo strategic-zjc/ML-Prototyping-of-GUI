@@ -5,50 +5,9 @@ import os
 import cv2
 import copy
 from GUIDetection.Utils import ImageUtil
-from GUIDetection.Utils import ColorUtil
+from GUIDetection.Utils.ImageUtil import *
 
-
-
-def showImageId(img, id):
-    ImageUtil.drawWindow(id, img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-def showImage(img):
-    ImageUtil.drawWindow('img', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-def drawBoundingRect(img, rectView, color = CColor.Red):
-    img_c = copy.deepcopy(img)
-    drawBoundingRectIntern(img_c, rectView, color)
-    showImage(img_c)
-    return img_c
-
-def drawBoundingRectList(img, rectViews, color = CColor.Red):
-    img_c = copy.deepcopy(img)
-    ImageUtil.drawRectViewList(img_c, rectViews, ColorUtil.cColortoInt(color))
-    showImage(img_c)
-    return img_c
-
-
-def fillBoundingRect(img, rectView):
-    img_c = copy.deepcopy(img)
-    fillBoundingRectIntern(img_c, rectView)
-    showImage(img_c)
-
-def fillBoundingRectIntern(img, rectView):
-    child = rectView.mChildren
-    for view in child:
-        ImageUtil.fillRect(img, view.bound(), ColorUtil.cColortoInt(ColorUtil.randomColor()))
-        fillBoundingRectIntern(img, view)
-
-def drawBoundingRectIntern(img, rectView, color):
-    child = rectView.mChildren
-
-    for view in child:
-        ImageUtil.drawRect(img, view.bound(), ColorUtil.cColortoInt(color))
-        drawBoundingRectIntern(img, view, color)
+from GUIDetection.Utils.ColorUtil import *
 
 
 HIERARCHY_DEPTH = 3
@@ -71,7 +30,6 @@ def searchHierarchyToGetAtomicGUICompon(rectView, dep, compon):
     for child in children:
         searchHierarchyToGetAtomicGUICompon(child, dep+1, compon)
 
-
 def processScreenshot(imageLocation):
     fileExitst = os.path.isfile(imageLocation)
     if (not fileExitst):
@@ -86,7 +44,6 @@ def processScreenshot(imageLocation):
     elif len(img_color.shape) == 3:
         height, width,channels = img_color.shape
 
-    # dst_denoised = cv2.fastNlMeansDenoising(img_gray)
     canny = Canny()
     dst_edge = canny.findEdge(img_gray)
 
@@ -113,4 +70,3 @@ def processScreenshot(imageLocation):
 
     drawBoundingRectList(img_color, atomicGUICompon, CColor.Red)
     return atomicGUICompon
-

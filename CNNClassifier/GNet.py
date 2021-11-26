@@ -2,9 +2,10 @@ import os
 import os.path
 
 import torch
+import numpy as np
 from torch import nn
 from d2l import torch as d2l
-from DataLoader import MyDataset, trans_fig_func, TRAIN_TXT_PATH, TEST_TXT_PATH, VAL_TXT_PATH, get_type_num, \
+from CNNClassifier.DataLoader import MyDataset, trans_fig_func, TRAIN_TXT_PATH, TEST_TXT_PATH, VAL_TXT_PATH, get_type_num, \
         LABEL_TO_GUI_TYPE_DICT, show_type_num, GUI_TYPE_LABEL_LIST
 from torch.utils import data
 import matplotlib.pyplot as plt
@@ -129,36 +130,34 @@ def get_confusion_mat(net, txt_path):
         if len(y_hat.shape) > 1 and y_hat.shape[1] > 1:
             y_hat = y_hat.argmax(axis=1)
         for j in range(len(y_hat)):
-            all_pred[y[j]][y_hat[j]] += 1
+            all_pred[y.cpu().numpy()[j]][y_hat.cpu().numpy()[j]] += 1
         metric.add(d2l.accuracy(net(X), y), y.numel())
-    conf_mat = torch.zeros_like(all_pred)
-    for i in range(len(type_cnt)):
-        conf_mat[i,:] = all_pred[i,:]/type_cnt
+
+    type_cnt = type_cnt.reshape((-1, 1))
+    conf_mat = all_pred / type_cnt
     for i in range(len(type_cnt)):
         type = LABEL_TO_GUI_TYPE_DICT.get(i)
-        print(f'GUI type: {type}, acc: {conf_mat[i][i]:.3f}')
+        print(f'GUI type: {type}, test acc: {conf_mat[i][i]:.3f}')
     print(f'total acc: {metric[0]/metric[1]:.3f}')
 
 
 
-    type_cnt = type_cnt.reshape((-1, 1))
     display = torch.cat((type_cnt, conf_mat), dim=1)
-    display = display.numpy()
-
-    plt.figure(figsize=(20, 8))
+    display_np = display.numpy()
+    display_np = np.around(display_np, 4)
+    plt.figure(figsize=(32, 16))
     colLabel = ['total']
     colLabel.extend(GUI_TYPE_LABEL_LIST)
     rowLabel = GUI_TYPE_LABEL_LIST
-    plt.table(cellText=display.tolist(),  # 简单理解为表示表格里的数据
+    plt.table(cellText=display_np,  # 简单理解为表示表格里的数据
               colLabels=colLabel,  # 每列的名称
               rowLabels=rowLabel,  # 每行的名称（从列名称的下一行开始）
               loc='center',
               cellLoc='center',
               rowLoc='center'  # 行名称的对齐方式
               )
-    plt.axis('tight')
     plt.axis('off')
-    plt.figure(dpi=80)
+    plt.figure(dpi=160)
     plt.show()
 
     return conf_mat
@@ -198,13 +197,14 @@ def get_confusion_mat_test(txt_path):
     print(type_cnt.shape)
 
     display = torch.cat((type_cnt, conf_mat), dim = 1)
-    display = display.numpy()
+    display_np = display.numpy()
+    display_np = np.around(display_np, 4)
 
     plt.figure(figsize=(20,8))
     colLabel = ['total']
     colLabel.extend(GUI_TYPE_LABEL_LIST)
     rowLabel = GUI_TYPE_LABEL_LIST
-    plt.table(cellText=display.tolist(),  # 简单理解为表示表格里的数据
+    plt.table(cellText=display_np,  # 简单理解为表示表格里的数据
               colLabels=colLabel,  # 每列的名称
               rowLabels=rowLabel,  # 每行的名称（从列名称的下一行开始）
               loc='center',
@@ -226,18 +226,8 @@ def get_confusion_mat_test(txt_path):
 
 
 if __name__ =="__main__":
-    # train(GNET_PATH, 10, 0.01)
     os.environ["CUDA_VISIBLE_DEVICES"] = '0'
     os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
-    # test_dataset = MyDataset(TEST_TXT_PATH, transform=trans_fig_func(resize))
-    # test_iter = data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
-    # lr, epoch = 0.005, 2
-    # train_net(gnet, train_iter, val_iter, epoch, lr, d2l.try_gpu(), lst_epoch)
 
     net = getNet()
     get_confusion_mat(net, TEST_TXT_PATH)
-
-
-    # gnet.to(d2l.try_gpu())
-    # print(evaluate_accuracy_gpu(gnet, test_iter, d2l.try_gpu()))
-    # print(evaluate_accuracy_gpu(gnet, val_iter, d2l.try_gpu()))

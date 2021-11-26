@@ -4,7 +4,6 @@ from GUIDetection.RectUtils.RectView import RectView
 
 from GUIDetection.RectUtils.Rect import Rect
 from GUIDetection.Utils import ImageUtil
-from GUIDetection.Utils.ColorUtil import CColor, ColorWrapper
 import GUIDetection.Utils.ColorUtil as ColorUtil
 
 
@@ -95,7 +94,6 @@ class ViewHierarchyProcessor:
                                 added = True
                                 break
 
-                        # did not contain non of them them add two of them as a list within overlapIndexes 
                         if (not added):
                             rectViews = []
                             rectViews.append(i)
@@ -161,7 +159,6 @@ class ViewHierarchyProcessor:
     def basicProcess(self):
         # de-overlap views
         self.delOverlapViews(self.mRootView)
-        #        self.writeHierarchyLog('after delOverlapViews')
 
         # we reorganize rectangles so that it has the right children
         # sometimes, one rectangle belong to one or the other

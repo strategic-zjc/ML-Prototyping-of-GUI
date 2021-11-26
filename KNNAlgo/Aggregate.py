@@ -1,15 +1,16 @@
-import RectUtils.RectUtil
+import GUIDetection.RectUtils.RectUtil
 from KNNAlgo.Utils.Node import *
 from KNNAlgo.Utils.NodeUtils import *
 import os
 from GUIDetection.procAppScreenshot import *
+from KNNAlgo.Utils.HierarchyUtil import *
 MINED_DIR = r'C:\Users\86134\Desktop\autotest_tool\ReDraw-Final-Google-Play-Dataset'
 
 MAX_AGGREGATE_DEPTH = 3
 
 
 def canAggregate(inputNodes, lastNodeCnt):
-    print(f'len of inputNodes is {len(inputNodes)}')
+    print(f'unmatched input nodes is {len(inputNodes)}')
     if len(inputNodes) == 0:
         return False
     if len(inputNodes) == lastNodeCnt:
@@ -40,10 +41,8 @@ def unionRectAreaRate(rect1, rect2):
 
 
 def matchScore(inputNodes, targetNode):
-
     # match componet has best IOU score, so the implements is shown as below
     targetLeafNodes = leafNode(targetNode)
-
 
     unionAreas = 0
     for inputNode in inputNodes:
@@ -94,20 +93,22 @@ def aggragate(inputGUINode):
                         matchHierarchy = hierarchy
 
         print(f'matched screenshot {matchImgPath}')
-        img = cv2.imread(matchImgPath)
-        showImage(img)
+        screen_img = cv2.imread(matchImgPath)
+        # showImage(img)
 
         # use hierarchy to aggregate
         containerTarget = containerNode(matchHierarchy)
         containerTarget = sorted(containerTarget, key=lambda x: x.dep, reverse= True)
 
         for container in containerTarget:
-            print(f'container depth {container.dep}')
             containsNodes = containsAnyInputNodes( container, inputNodes)
             if(len(containsNodes) != 0):
 
-                print(f'container type {container.classType}')
-                resizeRect = findBoundOfNode(containsNodes)
+                print(f'matched container type {container.classType}')
+
+                # resizeRect = findBoundOfNode(containsNodes)
+                # resizeRect = expandPx(resizeRect, px = 20)
+                resizeRect = container.rect
                 node = GUINode(rect=resizeRect)
                 node.classType = container.classType
                 node.dep = containsNodes[0].dep
@@ -117,20 +118,9 @@ def aggragate(inputGUINode):
                     containNode.parent = node
                 node.children.extend(containsNodes)
                 containerList.append(node)
+                showSelectedScreenLeafNodesAndTargetLayout(screen_img, matchHierarchy, container)
                 break
         # sorted target here
     inputGUINode.children = inputNodes
     inputGUINode.children.extend(containerList)
     return inputGUINode
-
-
-def traverseHierarchy(hierarchy):
-    print(hierarchy.classType)
-    for child in hierarchy.children:
-        print(child.classType)
-
-if __name__ =="__main__":
-    filename = r'C:\Users\86134\Desktop\autotest_tool\ML_GUI_Prototype\GUIDetection\com.crunchyroll.crmanga_1.png'
-    parser = XmlParser(filename)
-    hierarchy = parser.getHierarchy()
-    traverseHierarchy(hierarchy)

@@ -157,10 +157,6 @@ def get_type_num(path):
     return label_cnt, total
 
 
-if __name__ =="__main__":
-    create_test_txt()
-    show_type_num(TEST_TXT_PATH)
-
     # create_train_txt()
     # show_type_num(TRAIN_TXT_PATH)
     # BATCH_SIZE = 128

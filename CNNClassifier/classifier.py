@@ -1,5 +1,5 @@
-from GNet import *
-from DataLoader import *
+from CNNClassifier.GNet import *
+from CNNClassifier.DataLoader import *
 from PIL import Image
 
 import cv2
