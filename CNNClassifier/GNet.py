@@ -228,6 +228,5 @@ def get_confusion_mat_test(txt_path):
 if __name__ =="__main__":
     os.environ["CUDA_VISIBLE_DEVICES"] = '0'
     os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
-
     net = getNet()
     get_confusion_mat(net, TEST_TXT_PATH)

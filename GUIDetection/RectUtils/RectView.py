@@ -13,7 +13,6 @@ class RectView:
         self.y = rect.y
         self.width = rect.width
         self.height = rect.height
-        self.mColor = None
 
     def area(self):
         return self.height * self.width

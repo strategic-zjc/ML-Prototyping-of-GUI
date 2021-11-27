@@ -13,9 +13,10 @@ def runApplication(filePath):
     img_color = cv2.imread(filePath)
     GUINodes = rectViewsToNodes(compon, img_color)
     rect = Rect(0,0,img_color.shape[1], img_color.shape[0])
-    Node = GUINode(rect = rect)
-    Node.children.extend(GUINodes)
-    rootNode = aggragate(Node)
+    inNode = GUINode(rect = rect)
+    inNode.children.extend(GUINodes)
+    rootNode = aggragate(inNode)
+
     drawHierarchy(img_color, rootNode)
 
 
@@ -24,8 +25,14 @@ def runApplication(filePath):
     # left to implement.......
 
 if __name__ == '__main__':
-    # filename = sys.argv[1]
-    # print(filename)
+    argc = len(sys.argv)
+    print(argc)
+    if(argc == 1):
+        print(f'Please input a file path to start running')
+    else:
+        filename = sys.argv[1]
+        print(filename)
+        runApplication(filename)
     # filename = r'C:\Users\86134\Desktop\autotest_tool\ML_GUI_Prototype\screenshot\com.crunchyroll.crmanga_1.png'
     # filename = r'C:\Users\86134\Desktop\autotest_tool\ML_GUI_Prototype\screenshot\com.dropbox.android_2.png'
     # filename = r'C:\Users\86134\Desktop\autotest_tool\ML_GUI_Prototype\screenshot\com.amazon.mShop.android.shopping_2.png'
@@ -36,7 +43,6 @@ if __name__ == '__main__':
     # filename = r'C:\Users\86134\Desktop\autotest_tool\ML_GUI_Prototype\screenshot\com.giphy.messenger_1.png'
     # filename = r'C:\Users\86134\Desktop\autotest_tool\ML_GUI_Prototype\screenshot\com.allfootball.news_2.png'
     # filename = r'C:\Users\86134\Desktop\autotest_tool\ML_GUI_Prototype\screenshot\com.reddit.frontpage_2.png'
-    filename = r'C:\Users\86134\Desktop\autotest_tool\ML_GUI_Prototype\screenshot\com.allfootball.news_3.png'
+    # filename = r'C:\Users\86134\Desktop\autotest_tool\ML_GUI_Prototype\screenshot\com.allfootball.news_3.png'
     # filename = r'C:\Users\86134\Desktop\autotest_tool\ML_GUI_Prototype\screenshot\com.apalon.ringtones_1.png'
-
-    runApplication(filename)
+    # runApplication(filename)

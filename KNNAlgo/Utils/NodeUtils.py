@@ -2,6 +2,8 @@ import GUIDetection.RectUtils.RectUtil as RectUtil
 from KNNAlgo.Utils.Node import *
 from CNNClassifier import classifier
 from GUIDetection.Utils.ImageUtil import showGUIComponent
+
+
 def rectViewsToNodes(rectViews, image):
     showCnt = 0
     nodeList = []

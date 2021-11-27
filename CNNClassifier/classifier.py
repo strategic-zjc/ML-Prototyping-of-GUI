@@ -1,9 +1,7 @@
 from CNNClassifier.GNet import *
 from CNNClassifier.DataLoader import *
 from PIL import Image
-
 import cv2
-
 
 def predict(img):
     net = getNet()

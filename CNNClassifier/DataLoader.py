@@ -51,11 +51,11 @@ def create_train_txt():
                 label = GUI_TYPE_TO_LABEL_DICT.get(label)
 
                 if(label_cnt[label] < TRAIN_TYPE_MAX):
-                    # 保证不会超过TYPE_MAX_SUM
+                    # no more than TYPE_MAX_SUM
                     label_cnt[label] += 1
                     path_list.append(path)
                     label_list.append(label)
-    # 补足每个type
+    # augment type
     for root, dirs, files in os.walk(synthetic_train_dir):
         for file in files:
             if(file[0]!='.'):

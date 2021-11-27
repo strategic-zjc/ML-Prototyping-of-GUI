@@ -15,13 +15,6 @@ class ContourInfo:
 
 
 class ContourAnalysis:
-    IDENTICAL_CONTOURS_THRESHOLD = 0.75
-
-    d = 3
-
-    sigmaColor = 50
-
-    sigmaSpace = 50
 
     def findContoursWithCanny(self,imgData):
         contours,hierarchy = cv2.findContours(imgData,cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)

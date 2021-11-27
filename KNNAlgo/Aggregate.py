@@ -4,10 +4,13 @@ from KNNAlgo.Utils.NodeUtils import *
 import os
 from GUIDetection.procAppScreenshot import *
 from KNNAlgo.Utils.HierarchyUtil import *
-MINED_DIR = r'C:\Users\86134\Desktop\autotest_tool\ReDraw-Final-Google-Play-Dataset'
+
+
+MINED_DATA_DIR = r'C:\Users\86134\Desktop\autotest_tool\ReDraw-Final-Google-Play-Dataset'
+
+
 
 MAX_AGGREGATE_DEPTH = 3
-
 
 def canAggregate(inputNodes, lastNodeCnt):
     print(f'unmatched input nodes is {len(inputNodes)}')
@@ -38,6 +41,8 @@ def unionRectAreaRate(rect1, rect2):
         return union / total
     else:
         return 0
+
+
 
 
 def matchScore(inputNodes, targetNode):
@@ -74,7 +79,7 @@ def aggragate(inputGUINode):
         matchXmlPath = ''
         matchImgPath = ''
         matchHierarchy = None
-        for root, dirs, files in os.walk(MINED_DIR):
+        for root, dirs, files in os.walk(MINED_DATA_DIR):
             for file in files:
                 if file[0] != '.' and file.endswith('.xml'):
                     filename, ext = os.path.splitext(file)
@@ -94,7 +99,6 @@ def aggragate(inputGUINode):
 
         print(f'matched screenshot {matchImgPath}')
         screen_img = cv2.imread(matchImgPath)
-        # showImage(img)
 
         # use hierarchy to aggregate
         containerTarget = containerNode(matchHierarchy)
@@ -102,6 +106,8 @@ def aggragate(inputGUINode):
 
         for container in containerTarget:
             containsNodes = containsAnyInputNodes( container, inputNodes)
+            # how to choose a suitable container ?
+            # deeper depth in hierarchy and contains inpytnode
             if(len(containsNodes) != 0):
 
                 print(f'matched container type {container.classType}')
