@@ -1,5 +1,9 @@
-# ML-Prototyping-of-GUI
-论文复现 https://arxiv.org/abs/1802.02312
+# Machine Learning-Based Prototyping of Graphical User Interfaces for Mobile Apps
 
-项目文档见`项目文档.pdf`
+Machine Learning-Based Prototyping of Graphical User Interfaces for Mobile Apps论文复现 https://arxiv.org/abs/1802.02312
 
+项目文档见 `项目文档.pdf`
+
+项目运行视频与工具理解汇报链接 
+
+CNN模型（百度云盘链接：https://pan.baidu.com/s/1PGk3_xJ7kklDwNRHNjhZLQ 提取码：zjzh）使用见项目文档
